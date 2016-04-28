@@ -291,7 +291,7 @@ return msg1;
  // Variables for frequency count
 
 int tot_overflow;                									  // Timer3 Total Overflow counter
-char data_send[52] = "GET /store.php?word=LetMeIn!&field=freq&value=";             // Buffer to frequency value storage      
+char data_send[59] = "GET /orsosa/store.php?word=LetMeIn!&field=freq&value=";             // Buffer to frequency value storage      
 double freq;
 char freq_char[4];
 
@@ -352,17 +352,17 @@ ISR(TIMER3_OVF_vect)
 		freq = (float)((TCNT5)/gate);                                    
 		TCNT5=0;														   // Reset the coincidence counter
 		dtostrf(freq,6, 3, (char*)freq_char);                              //dtostrf() on stdlib.h, to cast a float to char*
-		data_send[32] = freq_char[1];
-		data_send[33] = freq_char[2];
-		data_send[34] = freq_char[3];
-		data_send[35] = freq_char[4];
-		data_send[36] = '\0';
+		data_send[53] = freq_char[1];
+		data_send[54] = freq_char[2];
+		data_send[55] = freq_char[3];
+		data_send[56] = freq_char[4];
+		data_send[57] = '\0';
 		
 		uart_send("----------");
 		uart_send(data_send);
 		uart_send("----------");
 		
-		uart1_send("AT+CIPSEND=4,52");                             
+		uart1_send("AT+CIPSEND=4,59");                             
 		uart_send(uart1_read_cmd());
 		uart1_send(data_send);
 		uart_send(uart1_read_cmd());                                    // Read the response
@@ -372,7 +372,7 @@ ISR(TIMER3_OVF_vect)
 		uart1_send("AT+CIPCLOSE=4");
 		uart_send(uart1_read_cmd());
 		
-		uart1_send("AT+CIPSTART=4,\"TCP\",\"http://atlasusr.fis.utfsm.cl/orsosa/\",80");       // Gate time works like the delay
+		uart1_send("AT+CIPSTART=4,\"TCP\",\"200.1.16.248\",80");       // Gate time works like the delay
 		uart_send(uart1_read_cmd());
 		
 		//uart1_flush();
@@ -407,9 +407,9 @@ void prog_init()      //  Initialization function ...
 	uart1_send("AT+CWJAP=\"atlasgw\",\"SiLabaLiS\""); _delay_ms(5000);       // Connect to Local Network
     uart_send(uart1_read_cmd());
 	
-	uart1_send("AT+CIPSTART=4,\"TCP\",\"http://atlasusr.fis.utfsm.cl/orsosa/\",80");       // Port to Send Data
+	uart1_send("AT+CIPSTART=4,\"TCP\",\"200.1.16.248\",80");       // Port to Send Data
 	_delay_ms(500);
-	uart1_send("AT+CIPSTART=3,\"TCP\",\"http://atlasusr.fis.utfsm.cl/orsosa/\",80");       // Port to Read Dara
+	uart1_send("AT+CIPSTART=3,\"TCP\",\"200.1.16.248\",80");       // Port to Read Dara
 	_delay_ms(500);
 	uart_send("ready");
 }
@@ -425,11 +425,11 @@ int main()
 	while(1)     
 	{
 
-		uart1_send("AT+CIPSEND=3,18");
+		uart1_send("AT+CIPSEND=3,25");
 		uart1_flush();
 		_delay_ms(100);
 	
-		uart1_send("GET /getdata.php");                 				// Send the query
+		uart1_send("GET /orsosa/getdata.php");                 				// Send the query
 		uart_send(uart1_read_query());
 	
 		uart_send("-----------------");
@@ -441,7 +441,7 @@ int main()
 		uart1_send("AT+CIPCLOSE=3");      
 
 		_delay_ms(1000);
-		uart1_send("AT+CIPSTART=3,\"TCP\",\"192.168.1.212\",80");       // Gate time works like the delay
+		uart1_send("AT+CIPSTART=3,\"TCP\",\"200.1.16.248\",80");       // Gate time works like the delay
 		//uart_send(uart1_read_cmd());
 		_delay_ms(500);
 		
