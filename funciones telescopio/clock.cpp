@@ -1,11 +1,33 @@
-// Timer 1 -> General Clock 
+
+//General system clock -> Timer0
+
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <util/delay.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <avr/interrupt.h>
+#include <string.h>
+
+#define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
+#define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )
+#define MICROSECONDS_PER_TIMER0_OVERFLOW (clockCyclesToMicroseconds(64 * 256))
+#define MILLIS_INC (MICROSECONDS_PER_TIMER0_OVERFLOW / 1000)
+#define FRACT_INC ((MICROSECONDS_PER_TIMER0_OVERFLOW % 1000) >> 3)
+#define FRACT_MAX (1000 >> 3)
 
 int timer0_overflow_count = 0;
 unsigned long timer0_millis = 0;
 unsigned char timer0_fract;
 
 
-void timer0_init(){
+class Gen_clock
+{
+	
+}
+
+void Gen_clock::init(void)
+{
 	TCCR0B |= (1 << CS01)|(1 << CS00);
 	TIMSK0 |= (1 << TOIE0);
 	sei();
@@ -31,7 +53,7 @@ SIGNAL(TIMER0_OVF_vect)
     timer0_overflow_count++;
 }
     
-unsigned long millis()
+unsigned long Gen_clock::millis(void)
 {
     unsigned long m;
     uint8_t oldSREG = SREG;

@@ -1,0 +1,58 @@
+
+//Servo -> Timer1 on PWM mode
+
+#define F_CPU 16000000UL
+#include <avr/io.h>
+#include <util/delay.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <avr/interrupt.h>
+#include <string.h>
+
+class Servo
+{	
+	public:
+	int angle;
+	int duty;
+	
+	init(void);
+	Set_angle(int ang_pos);
+
+}
+
+void servo::init(void)
+{
+	// initialize TCCR0 as per requirement, say as follows
+    TCCR1B |= (1<<WGM10)|(1<<COM11)|(1<<WGM11)|(1<<CS10);
+	// make OC0 pin (pin PB3 for atmega32) as output pin
+    DDRB |= (1<<PB3);
+}
+
+
+//Timer1 is 16-bit counter -> Max_counts = 65535 -> 4.096ms
+
+int angle_to_counts(int angle)   // angle in degrees, Proportional relation : 1ms->16000counts-> 0º, 2ms->32000counts -> 180º
+{
+	int counts;
+	counts = 89*angle + 16000;
+	return counts;
+}
+
+int counts_to_angle(int counts)
+{
+	float angle;
+	angle = (counts - 16000)/89;
+	return angle;
+}
+
+void servo::Set_angle(int ang_pos)
+{
+	int counts = angle_to_counts(ang_pos);
+    OCR1A = counts;
+	angle = ang_pos;
+	duty = (counts/65535)*100;
+}
+
+
+	
+
