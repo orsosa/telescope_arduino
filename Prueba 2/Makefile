@@ -6,6 +6,7 @@ send:
 	avrdude -c arduino -p m1280 -P com6 -b 57600 -F -U flash:w:db_test3.hex
 
 
+#all: db_t3 send
 all: db_t3 send
 
 
