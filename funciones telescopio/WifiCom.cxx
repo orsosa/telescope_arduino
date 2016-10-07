@@ -1,19 +1,4 @@
-#include 'WifiCom.h'
-
-#define F_CPU 16000000UL
-#include <avr/io.h>
-#include <util/delay.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <avr/interrupt.h>
-#include <string.h>
-
-#define BAUD 57600									// baud rate for serial communication
-#define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)
-#define WBAUD 115200
-#define WBAUDRATE 0x0008                            // baud rate for wifi-module communication
-#define UART1_AVAILABLE bit_is_set(UCSR1A, RXC1)
-
+#include "WifiCom.h"
 
 void WifiCom::init(void)
 {
@@ -36,7 +21,7 @@ int WifiCom::sendData(char *data)
 }
 
 // READ COMMANDS OF ESP2866
-char *WifiCom::readCmd(bool type=0))
+char *WifiCom::readCmd(bool type)
 {
 	int i=0;
 	unsigned char c;
@@ -45,18 +30,18 @@ char *WifiCom::readCmd(bool type=0))
 	{
 		//if(UART1_AVAILABLE)               //alternative way
 		c=uart1_recieve();
-		buffer[i]=c;
-		if ((buffer[i-1]=='O') && (buffer[i]=='K')) break;           // #! characteristic flag
-		if ((buffer[i-4]=='E') && (buffer[i-3]=='R')&&(buffer[i-2]=='R') && (buffer[i-1]=='O')&& (buffer[i]=='R')) break;  // break when an error is announced 
+		kBuffer[i]=c;
+		if ((kBuffer[i-1]=='O') && (kBuffer[i]=='K')) break;           // #! characteristic flag
+		if ((kBuffer[i-4]=='E') && (kBuffer[i-3]=='R')&&(kBuffer[i-2]=='R') && (kBuffer[i-1]=='O')&& (kBuffer[i]=='R')) break;  // break when an error is announced 
 		i++;
 	}
-	buffer[i+1]='\0';
-	return buffer;
+	kBuffer[i+1]='\0';
+	return kBuffer;
 }
 
 
 // READ QUERYS OF ESP268
-char *WifiCom::readQuery(bool type=0)
+char *WifiCom::readQuery(bool type)
 {
 	bool store_en = false;
 	int i=0;
@@ -71,17 +56,17 @@ char *WifiCom::readQuery(bool type=0)
 		p=c;
 		if(store_en)
 		{
-			buffer[i]=c;
-			if ((buffer[i-1]=='#') && (buffer[i]=='!')) break;           // #! characteristic flag
-			if ((buffer[i-4]=='E') && (buffer[i-3]=='R')&&(buffer[i-2]=='R') && (buffer[i-1]=='O')&& (buffer[i]=='R')) break;  // break when an error is announced 
+			kBuffer[i]=c;
+			if ((kBuffer[i-1]=='#') && (kBuffer[i]=='!')) break;           // #! characteristic flag
+			if ((kBuffer[i-4]=='E') && (kBuffer[i-3]=='R')&&(kBuffer[i-2]=='R') && (kBuffer[i-1]=='O')&& (kBuffer[i]=='R')) break;  // break when an error is announced 
 			i++;
 		}
 	}
-	buffer[i+1]='\0';
+	kBuffer[i+1]='\0';
 	//char  hola[10];
 	//sprintf(hola, "LAST I: %d\n",i);
 	//uart_send(hola);
-	return buffer;
+	return kBuffer;
 }
 
 /////// Auxiliary  functions

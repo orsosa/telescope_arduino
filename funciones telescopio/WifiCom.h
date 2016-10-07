@@ -18,16 +18,20 @@
 #define INIT_COUNT(x)  (TOTAL_COUNTS - (x)*TIMER_FREQ)
 #define MAX_GATE 4.194
 #define OVERFLOW(y)  (unsigned int)((y)/MAX_GATE)
-
-class WifiCom
+void uart1_transmit(unsigned char data);
+unsigned char uart1_recieve ();
+void uart1_flush();
+class WifiCom 
 {
 	public:
-	char buffer[1000];
-	WifiCom() : buffer();
+	int kBuffSize;
+	char kBuffer[1000];
+	WifiCom() : kBuffSize(1000) {memset(kBuffer,0,kBuffSize);}
 	
 	void init(void);
 	int sendData(char *data);
-	char *readCmd(bool type=0));
-	char *readQuery(bool type=0));
-}
+	char *readCmd(bool type=0);//
+	char *readQuery(bool type=0);
+	
+};
 
