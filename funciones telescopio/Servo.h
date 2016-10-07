@@ -1,4 +1,5 @@
 
+
 //Servo -> Timer1 on PWM mode
 
 #define F_CPU 16000000UL
@@ -25,9 +26,3 @@ void init(void);
 void setAngle(int ang_pos);
 
 };
-
-
-
-
-	
-
