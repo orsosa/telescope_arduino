@@ -22,6 +22,9 @@
 #define MAX_GATE 4.194
 #define OVERFLOW(y)  (unsigned int)((y)/MAX_GATE)
 
+void uart_transmit(unsigned char data);
+unsigned char uart_recieve();
+void uart_flush();
 
 //////////////////////////////////	Serial Communication 
 
@@ -29,8 +32,9 @@
 class SerialCom
 {
 	public:
-	char buffer[1000];
-	SerialCom() : buffer();
+	int kBuffSize;
+	char kBuffer[1000];
+	SerialCom() : kBuffSize(1000) {memset(kBuffer,0,kBuffSize);}
 	
 	void init(void);
 	int sendData(char *data);

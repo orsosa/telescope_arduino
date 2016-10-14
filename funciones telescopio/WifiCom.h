@@ -18,6 +18,7 @@
 #define INIT_COUNT(x)  (TOTAL_COUNTS - (x)*TIMER_FREQ)
 #define MAX_GATE 4.194
 #define OVERFLOW(y)  (unsigned int)((y)/MAX_GATE)
+
 void uart1_transmit(unsigned char data);
 unsigned char uart1_recieve ();
 void uart1_flush();
