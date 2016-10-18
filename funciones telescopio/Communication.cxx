@@ -1,6 +1,6 @@
 #include "Communication.h"
 
-void SerialCom::init()
+void SerialCom::init(void)
 {
 	UBRR0H = (BAUDRATE >> 8);                  //Set Baud Rate
 	UBRR0L = BAUDRATE;
@@ -29,10 +29,10 @@ int i=0;
 char c;
 while (((c=uart_recieve())!='\r') && (i < 99))
 {
-	buffer[i++]=c;
+	kBuffer[i++]=c;
 }
-buffer[i]='\0';
-return buffer;
+kBuffer[i]='\0';
+return kBuffer;
 }
 
 

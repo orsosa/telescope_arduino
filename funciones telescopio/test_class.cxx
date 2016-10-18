@@ -6,6 +6,10 @@
 #include <string.h>
 #include "Servo.h"
 #include "WifiCom.h"
+#include "Communication.h"
+//#include "Counter.h"
+//#include "GenClock.h"
+
 
 int main()
 {

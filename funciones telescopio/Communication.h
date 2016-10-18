@@ -39,7 +39,7 @@ class SerialCom
 	void init(void);
 	int sendData(char *data);
 	char *readData(void);
-}
+};
 
 
 
