@@ -22,3 +22,4 @@ void Servo::setAngle(int ang_pos)
   kAngle = ang_pos;
   kDuty = (counts/65535)*100;
 }
+
