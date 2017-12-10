@@ -1,12 +1,12 @@
 #include "sensorUS.h"
 
+uint16_t init;
 
 sensorUS::sensorUS(){
     DDRC |= TRIG;     // Pin 30 -> Trigger
     DDRA &= ~(ECHO);  //Pin 28 -> Echo
     PORTC &= ~(TRIG); // Inicializa la salida en 0   
-    
-    sensorUS::init_timer4();
+    init_timer4();
 }
 
 void sensorUS::init_timer4(){
@@ -16,23 +16,21 @@ void sensorUS::init_timer4(){
   TCNT4 = 0 ;
 }
 
-
-
-uint32_t sensorUS::getDistance(){
+void sensorUS::pulse()
+{
+  PORTC |= TRIG;
+  _delay_us(15);
+  PORTC &= ~(TRIG);
+}
+void sensorUS::getDistance(){
     //Manda pulso inicial
-   PORTC |= TRIG;
-   _delay_us(15);
-   PORTC &= ~(TRIG);
-
-    while (!(PINA & ECHO)){
-    }
-    TCNT4 = 0 ;
-
-    while (PINA & ECHO){
-    }
-
-    falling = TCNT4; // Save current count
-    counts = (uint32_t)falling;
-    dist = (uint32_t) counts / (58*2); // useconds / 58 to get distance in cm
-    return dist;    
+  pulse();
+  while (!(PINA & ECHO)){
+  } 
+  init=TCNT4;
+  
+  while (PINA & ECHO){
+  } 
+  distance = (uint32_t) (TCNT4-init) / (58*2); // useconds / 58 to get distance in cm.
+  TCNT4=0; // warning reset timer could take come time.
 }

@@ -6,20 +6,18 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define TRIG 0x80 //C7
-#define ECHO 0x40 //A6
+#define TRIG (1<<PINC7)//0x80 //C7
+#define ECHO (1<<PINA6)//0x40 //A6
 
 class sensorUS{
+  
+ private:  
+  uint16_t us_per_count;
+  void pulse();
+  void init_timer4();  
 
-private:
-    uint16_t falling;
-    volatile uint32_t counts;
-    volatile uint32_t dist;
-    uint16_t us_per_count;
-    void init_timer4(void);
-    void pulse(void);
-    
-public:
-    sensorUS();
-    uint32_t getDistance(void);
+ public:
+  uint32_t distance; //cm
+  sensorUS();
+  void  getDistance();
 };

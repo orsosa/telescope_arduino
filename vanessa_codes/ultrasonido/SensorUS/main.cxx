@@ -62,7 +62,6 @@ while(1)
   uart.sendData(n);
   counts = (uint32_t)falling;
   dist = (uint32_t) counts / (58*2); // useconds / 58 to get distance in cm
- 
   itoa(dist, buff,10);
   uart.sendData(buff);
   uart.sendData(n);
