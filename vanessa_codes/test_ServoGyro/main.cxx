@@ -68,11 +68,39 @@ int main(void){
 
     while(1){
       _delay_ms(1000);
-      g = imu.getGyro(&ax, &ay, &az, &gx, &gy, &gz);
-      uart.sendData(up);
+      imu.readData();
+      for (int k=0;k<3;k++)
+      {
+	uart.sendData(imu.kAccelC[k]);
+	uart.sendData(t);
+      }
+      uart.sendData(n);
+      for (int k=0;k<3;k++)
+      {
+	uart.sendData(imu.kGyroC[k]);
+	uart.sendData(t);
+      }
+      uart.sendData(n);
+      uart.sendData(n);
+      
       servo.setAngle(30);
-      g = imu.getGyro(&ax, &ay, &az, &gx, &gy, &gz);
       _delay_ms(1000);
+
+      imu.readData();
+      for (int k=0;k<3;k++)
+      {
+	uart.sendData(imu.kAccelC[k]);
+	uart.sendData(t);
+      }
+      uart.sendData(n);
+      for (int k=0;k<3;k++)
+      {
+	uart.sendData(imu.kGyroC[k]);
+	uart.sendData(t);
+      }
+      uart.sendData(n);
+      uart.sendData(n);
+      
       uart.sendData(down);
       servo.setAngle(0);
       /*

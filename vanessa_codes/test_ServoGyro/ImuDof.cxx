@@ -20,6 +20,15 @@ void ImuDof::init(){
     i2c.writeBits(ImuAddr, 0x1C, 4, 2, 0x00);
     //Disable Sleep Mode
     i2c.writeBit(ImuAddr, 0x6B, 6, false);
+    for (int k =0;k<3;k++)
+    {
+      kAccelC[k]=(char*)malloc(8);
+      kGyroC[k] =(char*)malloc(8);
+
+      kAccelC[k][7]='\0';
+      kGyroC[k][7]='\0';
+    }
+    
 }
 
 
@@ -33,6 +42,26 @@ bool ImuDof::testConnection() {
     }
 }
 
+void ImuDof::readData()
+{
+    ImuDof::clearData();
+    i2c.readBytes(ImuAddr, 0x3B, 14, data);  
+    kAccel[0] = (((int16_t)data[0]) << 8) | data[1]; //x
+    kAccel[1] = (((int16_t)data[2]) << 8) | data[3]; //y
+    kAccel[2] = (((int16_t)data[4]) << 8) | data[5]; //z
+
+    kGyro[0] = (((int16_t)data[8])  << 8) | data[9]; //x
+    kGyro[1] = (((int16_t)data[10]) << 8) | data[11];//y
+    kGyro[2] = (((int16_t)data[12]) << 8) | data[13];//z
+
+    for (int k=0;k<3;k++)
+    {
+      kAccelF[k] = (float) kAccel[k]/ 16384;//x
+      kGyroF[k] = (float) kGyro[k] *250/32768;//x
+      dtostrf(kAccelF[k],7, 3, (char*)kAccelC[k]);
+      dtostrf(kGyroF[k],7, 3, (char*)kGyroC[k]);
+    }
+}
 
 void ImuDof::getData(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz){
     ImuDof::clearData();
@@ -90,7 +119,7 @@ float * ImuDof::getComp(){
 int16_t * ImuDof::getCompSample(){
     //ImuDof::clearData();
     i2c.writeByte(ImuAddr,  0x37, 0x02); //set i2c bypass enable pin to true to access magnetometer
-	_delay_ms(10);
+    _delay_ms(10);
     i2c.writeByte(0x18, 0x0A, 0x01); //enable the magnetometer
     _delay_ms(10);
     i2c.readBytes(0x18, 0x03, 6, data);
