@@ -4,7 +4,12 @@
 int main(){
     Servo servo;
     servo.init();
-    servo.test();
-    _delay_ms(10000);
-    servo.setAngle(180);
+    //Prueba se ,amdas distintos àngulos
+    while(true){
+        servo.setAngle(120);
+        _delay_ms(5000);
+        servo.setAngle(30);
+        _delay_ms(5000);
+        
+    }
 }

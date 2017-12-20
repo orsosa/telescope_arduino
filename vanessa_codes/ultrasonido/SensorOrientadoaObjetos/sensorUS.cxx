@@ -24,13 +24,12 @@ void sensorUS::pulse()
 }
 void sensorUS::getDistance(){
     //Manda pulso inicial
+  TCNT4=0; // warning reset timer could take come time.
   pulse();
-  while (!(PINA & ECHO)){
-  } 
+  while (!(PINA & ECHO)); 
   init=TCNT4;
   
-  while (PINA & ECHO){
-  } 
+  while (PINA & ECHO); 
   distance = (uint32_t) (TCNT4-init) / (58*2); // useconds / 58 to get distance in cm.
-  TCNT4=0; // warning reset timer could take come time.
+
 }
